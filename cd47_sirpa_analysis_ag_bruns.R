@@ -1,7 +1,8 @@
 library(DESeq2)
 library("ggplot2")
 
-counts = read.table("../Data/DLBCL/GSE178965_count_matrix.txt.gz",header = T,row.names = 1)
+# https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE178965
+counts = read.table("GSE178965_count_matrix.txt.gz",header = T,row.names = 1)
 des = as.data.frame(colnames(counts))
 des$condition = c("GOOD","RELAPSE","RELAPSE","RELAPSE","RELAPSE","GOOD","GOOD",
                   "GOOD","GOOD","GOOD","GOOD","RELAPSE","RELAPSE","RELAPSE",
@@ -22,8 +23,7 @@ Q_sirpa = quantile(sirpa$count, probs=c(.25, .75), na.rm = FALSE)
 Q_cd47 = quantile(cd47$count, probs=c(.25, .75), na.rm = FALSE)
 iqr_s = IQR(sirpa$count)
 iqr_c = IQR(cd47$count)
-up =  Q_sirpa[2]+1.5*iqr_s # Upper Range  
-low = Q_sirpa[1]-1.5*iqr_s # Lower Range
+
 sirpa_mod = subset(sirpa, sirpa$count > (Q_sirpa[1] - 1.5*iqr_s) & sirpa$count < (Q_sirpa[2]+1.5*iqr_s))
 
 ggplot(sirpa_mod, aes(x=condition, y=count))+
